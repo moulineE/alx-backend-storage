@@ -22,7 +22,7 @@ def tracker(fn: Callable) -> Callable:
 
         r.set(arg, 10, 10)
         HTML = fn(arg)
-        r.set(arg, HTML, 10)
+        r.set("{}".format(arg), HTML, 10)
         return HTML
     return wrapper
 
