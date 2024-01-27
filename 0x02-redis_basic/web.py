@@ -22,6 +22,9 @@ def tracker(fn: Callable) -> Callable:
 
         r.set(arg, 10, 10)
         HTML = fn(arg)
+        cache = r.get(arg)
+        if cache:
+            return cache.decode("utf-8")
         r.set(arg, HTML, 10)
         return HTML
     return wrapper
