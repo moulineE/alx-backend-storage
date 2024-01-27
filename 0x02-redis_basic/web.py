@@ -18,7 +18,7 @@ def tracker(fn: Callable) -> Callable:
         particular URL was accessed
         """
         r = redis.Redis()
-        r.incr("count:{{{}}}".format(arg))
+        r.incr("count:{}".format(arg))
         cache = r.get("{}".format(arg))
         if cache:
             return cache.decode('utf-8')
