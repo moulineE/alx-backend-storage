@@ -3,6 +3,25 @@
 import redis
 from typing import Union, Optional, Callable, Any
 import uuid
+from functools import wraps
+
+
+def count_calls(method: Callable) -> Callable:
+    """
+    decorator that takes a single method Callable argument and returns a
+    Callable
+    :param method:
+    :return:
+    """
+    @wraps(method)
+    def wrapper(self, *args, **kwargs) -> str:
+        """
+        a wrapper function that count for that key every time the method
+        is called and returns the value returned by the original method
+        """
+        self._redis.incr(method.__qualname__)
+        return method(self, *args, **kwargs)
+    return wrapper
 
 
 class Cache:
@@ -12,6 +31,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """
         store the input data in Redis using the random key and return the key
