@@ -19,12 +19,10 @@ def tracker(fn: Callable) -> Callable:
         """
         r = redis.Redis()
         r.incr("count:{{{}}}".format(arg))
-
-        r.set(arg, 10, 10)
-        HTML = fn(arg)
         cache = r.get(arg)
         if cache:
-            return cache.decode("utf-8")
+            return cache.decode('utf-8')
+        HTML = fn(arg)
         r.set(arg, HTML, 10)
         return HTML
     return wrapper
